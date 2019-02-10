@@ -2,6 +2,7 @@
 import React, {Component, Fragment} from 'react';
 import './style.css'
 import TodoItem from './TodoItem';
+import axios from 'axios'
 
 
 class App extends Component {
@@ -29,6 +30,7 @@ class App extends Component {
                         className="input"
                         value={this.state.inputValue}
                         onChange={this.handleInputChange}
+                        ref={(input) => {this.input = input}}
                         type="text"/>
                     <button onClick={this.handleBtnClick}>提交</button>
                 </div>
@@ -37,6 +39,16 @@ class App extends Component {
                 </ul>
             </Fragment>
         )
+    }
+    componentDidMount() {
+        axios.get('api/todolist')
+            .then((res) => {
+                console.log(res.data);
+                this.setState(() => ({
+                    list: [...res.data]
+                }))
+            })
+            .catch(() => {alert('error')})
     }
 
     getTodoItem() {
@@ -53,7 +65,8 @@ class App extends Component {
     }
 
     handleInputChange(e) {
-        const value = e.target.value;
+        // const value = e.target.value;
+        const value = this.input.value;
         // react 更改 state 的数据必须使用 setState
         this.setState(() => ({
             inputValue: value

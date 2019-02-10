@@ -1,83 +1,59 @@
-// Fragment 占位符,渲染时,不会出现这个标签
-import React, {Component, Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './style.css'
-import TodoItem from './TodoItem';
 
 
 class App extends Component {
-    // 最优先执行的函数
     constructor(props) {
-        // 继承父类
         super(props);
-        // 定义数据
         this.state = {
-            inputValue: '',
-            list: []
+            list: [],
+            show: true
         };
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleBtnClick = this.handleBtnClick.bind(this);
-        this.handleItemDelete = this.handleItemDelete.bind(this)
+        this.handleAddItem = this.handleAddItem.bind(this);
     }
-
     render() {
         return (
             <Fragment>
-                <div>
-                    <label htmlFor="insertArea">输入内容</label>
-                    <input
-                        id="insertArea"
-                        className="input"
-                        value={this.state.inputValue}
-                        onChange={this.handleInputChange}
-                        type="text"/>
-                    <button onClick={this.handleBtnClick}>提交</button>
-                </div>
-                <ul>
-                    {this.getTodoItem()}
-                </ul>
+                {/*<CSSTransition
+                    in={this.state.show}
+                    timeout={300}
+                    classNames='fade'
+                    unmountOnExit
+                    onEntered={(el) => {el.style.color = 'blue'}}
+                    appear={true}
+                >
+                    <div>hello</div>
+                </CSSTransition>*/}
+                <TransitionGroup>
+                {
+                    this.state.list.map((item, index) => {
+                        return (
+                            <CSSTransition
+                                timeout={300}
+                                classNames='fade'
+                                unmountOnExit
+                                onEntered={(el) => {el.style.color = 'blue'}}
+                                appear={true}
+                                key={index}
+                            >
+                            <div>{item}</div>
+                            </CSSTransition>
+                        )
+                    })
+                }
+                </TransitionGroup>
+                <button onClick={this.handleAddItem}>toggle</button>
             </Fragment>
         )
     }
-
-    getTodoItem() {
-        return this.state.list.map((item, index) => {
-            return (
-                <TodoItem
-                    content={item}
-                    key={index}
-                    index={index}
-                    deleteItem={this.handleItemDelete}
-                />
-            )
+    handleAddItem() {
+        this.setState((prevState) => {
+            return {
+                list: [...prevState.list, 'item']
+            }
         })
     }
-
-    handleInputChange(e) {
-        const value = e.target.value;
-        // react 更改 state 的数据必须使用 setState
-        this.setState(() => ({
-            inputValue: value
-        }));
-    }
-
-    handleBtnClick() {
-        this.setState((prevState) => ({
-            list: [...prevState.list, prevState.inputValue],
-            inputValue: ''
-        }));
-    }
-
-    handleItemDelete(index) {
-        // immutable
-        // state 不允许我们做任何的改变
-        this.setState((prevState) => {
-            // 拷贝list
-            const list = [...prevState.list];
-            list.splice(index, 1);
-            return {list}
-        });
-    }
-
 }
 
 export default App;

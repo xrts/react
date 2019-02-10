@@ -5,6 +5,9 @@ class TodoItem extends Component {
         // 绑定this
         this.handleClick = this.handleClick.bind(this);
     }
+    shouldComponentUpdate() {
+        return false
+    }
     render() {
         const { content } = this.props;
         return <div onClick={this.handleClick}>{content}</div>

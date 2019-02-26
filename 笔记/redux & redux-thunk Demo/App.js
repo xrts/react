@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-
 import store from './store/index';
-import { getInputChangeAction, getAddItemAction, getDeleteItemAction, getInitList } from './store/actionCreators'
+import { getInputChangeAction, getAddItemAction, getDeleteItemAction, getTodoList } from './store/actionCreators'
 import TodoListUl from './TodoListUI';
 
 
@@ -25,10 +24,9 @@ class App extends Component {
                 />
     }
     componentDidMount() {
-        const action = getInitList();
+        const action = getTodoList();
         store.dispatch(action);
         console.log(action);
-
     }
     handleInputChange(e) {
         const action = getInputChangeAction(e.target.value);
